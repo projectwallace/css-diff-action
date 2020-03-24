@@ -1,0 +1,23 @@
+{
+  "name": "gh-action-css-diff",
+  "version": "1.0.0",
+  "description": "Test repo to let a GitHub action report the CSS Analytics diff in a PR",
+  "main": "runner.js",
+  "scripts": {
+    "test": "node runner.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bartveneman/gh-action-css-diff.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bartveneman/gh-action-css-diff/issues"
+  },
+  "homepage": "https://github.com/bartveneman/gh-action-css-diff#readme",
+  "devDependencies": {
+    "got": "^10.7.0"
+  }
+}

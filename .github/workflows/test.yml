@@ -12,6 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: curl https://www.projectwallace.com/webhooks/v1/imports/preview?token=6f92d25c-1f52-4335-86ea-1240425dd26a -X POST -H "Content-Type: text/css" -d @style.css
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
         with:
-          project-wallace-token: ${{ secrets.PROJECT_WALLACE_TOKEN }}
+          node-version: 12.x
+      - run: npm ci
+      - run: npm test
+        env:
+          PROJECT_WALLACE_TOKEN: ${{ secrets.PROJECT_WALLACE_TOKEN }}
