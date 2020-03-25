@@ -24,5 +24,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           css-path: ./style.css
       - name: Echo output
-        run:
-          echo "Diff: ${{ steps.cssAnalyticsDiff.outputs. }}"
+        run: echo "Diff ${{ steps.cssAnalyticsDiff.outputs.changeCount }}"
