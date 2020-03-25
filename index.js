@@ -60,13 +60,34 @@ try {
 			const body = '```json\n' + JSON.stringify(changes, null, 2) + '\n```'
 			if (debug) console.log({ owner, repo, issue_number, body })
 
+			let formattedBody = 'No changes in CSS Analytics detected'
+
+			if (changeCount > 0) {
+				formattedBody = `
+## CSS Analytics changes
+
+| changed metrics | ${changeCount} |
+|-----------------|----------------|
+
+| metric | current value | value after PR | difference |
+|--------|---------------|----------------|------------|
+${Object.entries(changes)
+	.filter(([id, changeSet]) => Boolean(changeSet.oldValue))
+	.map(([id, changeSet]) => {
+		return `| ${id} | ${changeSet.oldValue} | ${changeSet.newValue} | ${
+			changeSet.diff.absolute
+		} (${changeSet.diff.relative * 100}%)`
+	})}
+				`
+			}
+
 			const octokit = new github.GitHub(githubToken)
 			octokit.issues
 				.createComment({
 					owner,
 					repo,
 					issue_number,
-					body,
+					body: formattedBody,
 				})
 				.then((commentRequest) => {
 					if (debug) console.log({ commentRequest })
