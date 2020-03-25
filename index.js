@@ -76,7 +76,8 @@ ${Object.entries(changes)
 		return `| ${id} | ${changeSet.oldValue} | ${changeSet.newValue} | ${
 			changeSet.diff.absolute
 		} (${Math.round(changeSet.diff.relative * 100)}%) |`
-	})}
+	})
+	.join('\n')}
 
 #### Raw changes
 \`\`\`json
