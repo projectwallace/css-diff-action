@@ -51,11 +51,11 @@ try {
 			}, {})
 		const changeCount = Object.entries(changes).length
 
-		if (debug) console.log({ hasChanges, changeCount, changes })
+		// if (debug) console.log({ hasChanges, changeCount, changes })
 
-		core.setOutput('hasChanges', hasChanges)
-		core.setOutput('changeCount', changeCount)
-		core.setOutput('changes', changes)
+		// core.setOutput('hasChanges', hasChanges)
+		// core.setOutput('changeCount', changeCount)
+		// core.setOutput('changes', changes)
 
 		if (eventName === 'pull_request') {
 			const owner = payload.repository.owner.login

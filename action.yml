@@ -15,13 +15,13 @@ inputs:
     description: If true, adds some additional logging
     default: false
 
-outputs:
-  hasChanged:
-    description: 'Whether the CSS Analytics has changed'
-  changeCount:
-    description: 'How many CSS Analytics metrics have changed'
-  changes:
-    description: 'List of CSS Analytics metrics that have changed'
+# outputs:
+#   hasChanged:
+#     description: 'Whether the CSS Analytics has changed'
+#   changeCount:
+#     description: 'How many CSS Analytics metrics have changed'
+#   changes:
+#     description: 'List of CSS Analytics metrics that have changed'
 
 runs:
   using: 'node12'
