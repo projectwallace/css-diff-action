@@ -24,7 +24,11 @@ try {
 	}
 
 	const css = fs.readFileSync(cssPath, 'utf8')
+	const event = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')
+
 	if (debug) {
+		console.log('Event Name: ' + process.env.GITHUB_EVENT_NAME)
+		console.log({ event })
 		console.log({ css })
 	}
 
