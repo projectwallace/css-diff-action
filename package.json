@@ -19,5 +19,8 @@
   "homepage": "https://github.com/bartveneman/gh-action-css-diff#readme",
   "devDependencies": {
     "got": "^10.7.0"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.3"
   }
 }

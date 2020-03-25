@@ -25,7 +25,7 @@ got(`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${process.
 			all[metric[0]] = metric[1]
 			return all
 		}, {})
-	const changeCount = changes.length
+	const changeCount = Object.entries(changes).length
 
 	console.log({
 		hasChanges,
