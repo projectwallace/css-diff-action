@@ -8,26 +8,25 @@ try {
 	const webhookToken = core.getInput('project-wallace-token')
 	const githubToken = core.getInput('github-token')
 	const debug = Boolean(core.getInput('debug'))
-	const payload = github.context.payload
-	const eventName = process.env.GITHUB_EVENT_NAME
+	const { actor, eventName, payload } = github.context
+
+	const css = fs.readFileSync(cssPath, 'utf8')
 
 	if (debug) {
 		console.log(
 			JSON.stringify(
 				{
 					cssPath,
+					css,
 					eventName,
 					payload,
-					context: github.context,
+					actor,
 				},
 				null,
 				2
 			)
 		)
 	}
-
-	const css = fs.readFileSync(cssPath, 'utf8')
-	if (debug) console.log({ css })
 
 	got(
 		`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${webhookToken}`,
