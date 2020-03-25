@@ -16,7 +16,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - run: npm ci
-      - run: npm test
-        env:
-          PROJECT_WALLACE_TOKEN: ${{ secrets.PROJECT_WALLACE_TOKEN }}
+      - name: CSS Analytics Diff
+        id: cssAnalyticsDiff
+        uses: ./
+        with:
+          project-wallace-token: ${{ secrets.PROJECT_WALLACE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          css-path: ./style.css
+      - name: Echo output
+        run:
+          echo "Diff: ${{ steps.cssAnalyticsDiff.outputs. }}"
