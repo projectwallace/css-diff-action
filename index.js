@@ -88,13 +88,25 @@ ${Object.entries(changes)
 
 		return `| ${id} | <ol>${changeSet.diff
 			.map((item) => {
-				return `<li><code>${
-					item.value.property
+				return `<li><code>${item.removed ? '<del>' : ''}${
+					item.added
+						? ' '
+						: item.value.property
 						? `${item.value.property}: ${item.value.value}`
 						: item.value.value || item.value
-				}</code></li>`
+				}${item.removed ? '</del>' : ''}</code></li>`
 			})
-			.join('')}</ol> | - | - |`
+			.join('')}</ol> | <ol>${changeSet.diff
+			.map((item) => {
+				return `<li><code>${item.added ? '<ins>' : ' '}${
+					item.removed
+						? ' '
+						: item.value.property
+						? `${item.value.property}: ${item.value.value}`
+						: item.value.value || item.value
+				}${item.added ? '</ins>' : ''}</code></li>`
+			})
+			.join('')}</ol> | N/A |`
 	})
 	.join('\n')}
 `
