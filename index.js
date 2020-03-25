@@ -58,13 +58,19 @@ try {
 		core.setOutput('changes', changes)
 
 		if (eventName === 'pull_request') {
+			const owner = payload.repository.owner.login
+			const repo = payload.repository.name
+			const issue_number = payload.number
+			const body = '```json\n' + JSON.stringify(changes, null, 2) + '\n```'
+			if (debug) console.log({ owner, repo, issue_number, body })
+
 			const octokit = new github.GitHub(githubToken)
 			octokit.issues
 				.createComment({
-					owner: payload.repository.owner.login,
-					repo: payload.repository.name,
-					issue_number: payload.number,
-					body: '```json\n' + JSON.stringify(changes, null, 2) + '\n```',
+					owner,
+					repo,
+					issue_number,
+					body,
 				})
 				.then((result) => console.log({ result }))
 		}
