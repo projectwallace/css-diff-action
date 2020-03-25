@@ -61,6 +61,12 @@ try {
 
 			let formattedBody = 'No changes in CSS Analytics detected'
 
+			function formatNumber(number) {
+				return Number.isInteger(number)
+					? new Intl.NumberFormat().format(number)
+					: parseFloat(number).toFixed(3)
+			}
+
 			if (changeCount > 0) {
 				formattedBody = `
 ### CSS Analytics changes
@@ -73,9 +79,10 @@ try {
 ${Object.entries(changes)
 	.filter(([id, changeSet]) => typeof changeSet.oldValue !== 'undefined')
 	.map(([id, changeSet]) => {
-		return `| ${id} | ${changeSet.oldValue} | ${changeSet.newValue} | ${
-			changeSet.diff.absolute
-		} (${Math.round(changeSet.diff.relative * 100)}%) |`
+		return `| ${id} | ${changeSet.oldValue} | ${formatNumber(
+			changeSet.newValue
+		)} | ${formatNumber(changeSet.diff.absolute)} (${changeSet.diff.relative >
+			0 && '+'}${formatNumber(changeSet.diff.relative * 100)}%) |`
 	})
 	.join('\n')}
 
