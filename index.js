@@ -77,20 +77,35 @@ try {
 | metric | current value | value after PR | difference |
 |--------|---------------|----------------|------------|
 ${Object.entries(changes)
-	.filter(([id, changeSet]) => typeof changeSet.oldValue !== 'undefined')
 	.map(([id, changeSet]) => {
-		return `| ${id} | ${formatNumber(changeSet.oldValue)} | ${formatNumber(
-			changeSet.newValue
-		)} | ${formatNumber(changeSet.diff.absolute)} (${
-			changeSet.diff.relative > 0 ? '+' : ''
-		}${formatNumber(changeSet.diff.relative * 100)}%) |`
+		if (typeof changeSet.oldValue !== 'undefined') {
+			return `| ${id} | ${formatNumber(changeSet.oldValue)} | ${formatNumber(
+				changeSet.newValue
+			)} | ${formatNumber(changeSet.diff.absolute)} (${
+				changeSet.diff.relative > 0 ? '+' : ''
+			}${formatNumber(changeSet.diff.relative * 100)}%) |`
+		}
+
+		return `<tr>
+			<td>${id}</td>
+			<td colspan="3">
+				<ol>
+					${changeSet.diff.map((item) => {
+						return `
+							<li>
+								<code>${
+									item.value.property
+										? `${item.value.property}: ${item.value.value}`
+										: item.value.value || item.value
+								}</code>
+							</li>
+						`
+					})}
+				</ol>
+			</td>
+		</tr>`
 	})
 	.join('\n')}
-
-#### Raw changes
-\`\`\`json
-${JSON.stringify(changes, null, 2)}
-\`\`\`
 `
 			}
 
