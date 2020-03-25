@@ -9,13 +9,16 @@ try {
 	const githubToken = core.getInput('github-token')
 	const debug = Boolean(core.getInput('debug'))
 	const payload = github.context.payload
+	const eventName = process.env.GITHUB_EVENT_NAME
 
 	if (debug) {
 		console.log(
 			JSON.stringify(
 				{
 					cssPath,
+					eventName,
 					payload,
+					context: github.context,
 				},
 				null,
 				2
@@ -24,13 +27,7 @@ try {
 	}
 
 	const css = fs.readFileSync(cssPath, 'utf8')
-	const event = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')
-
-	if (debug) {
-		console.log('Event Name: ' + process.env.GITHUB_EVENT_NAME)
-		console.log({ event })
-		console.log({ css })
-	}
+	if (debug) console.log({ css })
 
 	got(
 		`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${webhookToken}`,
@@ -55,21 +52,13 @@ try {
 			}, {})
 		const changeCount = Object.entries(changes).length
 
-		if (debug) {
-			console.log({
-				hasChanges,
-				changeCount,
-				changes,
-			})
-		}
+		if (debug) console.log({ hasChanges, changeCount, changes })
 
 		core.setOutput('hasChanges', hasChanges)
 		core.setOutput('changeCount', changeCount)
 		core.setOutput('changes', changes)
 	})
 } catch (error) {
-	if (debug) {
-		console.error(error)
-	}
+	if (debug) console.error(error)
 	core.setFailed(error.message)
 }
