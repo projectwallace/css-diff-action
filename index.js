@@ -79,10 +79,11 @@ try {
 ${Object.entries(changes)
 	.filter(([id, changeSet]) => typeof changeSet.oldValue !== 'undefined')
 	.map(([id, changeSet]) => {
-		return `| ${id} | ${changeSet.oldValue} | ${formatNumber(
+		return `| ${id} | ${formatNumber(changeSet.oldValue)} | ${formatNumber(
 			changeSet.newValue
-		)} | ${formatNumber(changeSet.diff.absolute)} (${changeSet.diff.relative >
-			0 && '+'}${formatNumber(changeSet.diff.relative * 100)}%) |`
+		)} | ${formatNumber(changeSet.diff.absolute)} (${
+			changeSet.diff.relative > 0 ? '+' : ''
+		}${formatNumber(changeSet.diff.relative * 100)}%) |`
 	})
 	.join('\n')}
 
