@@ -86,24 +86,11 @@ ${Object.entries(changes)
 			}${formatNumber(changeSet.diff.relative * 100)}%) |`
 		}
 
-		return `<tr>
-			<td>${id}</td>
-			<td colspan="3">
-				<ol>
-					${changeSet.diff.map((item) => {
-						return `
-							<li>
-								<code>${
-									item.value.property
-										? `${item.value.property}: ${item.value.value}`
-										: item.value.value || item.value
-								}</code>
-							</li>
-						`
-					})}
-				</ol>
-			</td>
-		</tr>`
+		return `| ${id} | \`\`\`json\n${JSON.stringify(
+			changeSet,
+			null,
+			1
+		)}\n\`\`\` | ${JSON.stringify(changeSet, null, 1)} |  |`
 	})
 	.join('\n')}
 `
