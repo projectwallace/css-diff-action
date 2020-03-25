@@ -66,7 +66,7 @@ try {
 					issue_number: payload.number,
 					body: '```json\n' + JSON.stringify(changes, null, 2) + '\n```',
 				})
-				.then((result) => console.log(result))
+				.then((result) => console.log({ result }))
 		}
 	})
 } catch (error) {
