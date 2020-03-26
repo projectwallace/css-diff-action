@@ -1059,42 +1059,48 @@ const got = __webpack_require__(77)
 const core = __webpack_require__(470)
 const github = __webpack_require__(469)
 
-try {
-	const cssPath = core.getInput('css-path')
-	const webhookToken = core.getInput('project-wallace-token')
-	const githubToken = core.getInput('github-token')
-	const debug = Boolean(core.getInput('debug'))
-	const { actor, eventName, payload } = github.context
+async function run() {
+	try {
+		const cssPath = core.getInput('css-path')
+		const webhookToken = core.getInput('project-wallace-token')
+		const githubToken = core.getInput('github-token')
+		const debug = Boolean(core.getInput('debug'))
+		const { actor, eventName, payload } = github.context
 
-	const css = fs.readFileSync(cssPath, 'utf8')
-
-	if (debug) {
-		console.log(
-			JSON.stringify(
-				{
-					cssPath,
-					css,
-					eventName,
-					payload,
-					actor,
-				},
-				null,
-				2
-			)
-		)
-	}
-
-	got(
-		`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${webhookToken}`,
-		{
-			method: 'post',
-			headers: {
-				'Content-Type': 'text/css',
-				Accept: 'application/json',
-			},
-			body: css,
+		if (!eventName === 'pull_request') {
+			if (debug) console.log('Event is not a Pull Request; Exiting.')
+			return
 		}
-	).then((response) => {
+
+		const css = fs.readFileSync(cssPath, 'utf8')
+
+		if (debug) {
+			console.log(
+				JSON.stringify(
+					{
+						cssPath,
+						css,
+						eventName,
+						payload,
+						actor,
+					},
+					null,
+					2
+				)
+			)
+		}
+
+		const response = await got(
+			`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${webhookToken}`,
+			{
+				method: 'post',
+				headers: {
+					'Content-Type': 'text/css',
+					Accept: 'application/json',
+				},
+				body: css,
+			}
+		)
 		const { diff } = JSON.parse(response.body)
 
 		const hasChanges = Object.values(diff).some((metric) => metric.changed)
@@ -1109,22 +1115,21 @@ try {
 
 		if (debug) console.log({ hasChanges, changeCount, changes })
 
-		if (eventName === 'pull_request') {
-			const owner = payload.repository.owner.login
-			const repo = payload.repository.name
-			const issue_number = payload.number
-			if (debug) console.log({ owner, repo, issue_number })
+		const owner = payload.repository.owner.login
+		const repo = payload.repository.name
+		const issue_number = payload.number
+		if (debug) console.log({ owner, repo, issue_number })
 
-			let formattedBody = 'No changes in CSS Analytics detected'
+		let formattedBody = 'No changes in CSS Analytics detected'
 
-			function formatNumber(number) {
-				return Number.isInteger(number)
-					? new Intl.NumberFormat().format(number)
-					: parseFloat(number).toFixed(3)
-			}
+		function formatNumber(number) {
+			return Number.isInteger(number)
+				? new Intl.NumberFormat().format(number)
+				: parseFloat(number).toFixed(3)
+		}
 
-			if (changeCount > 0) {
-				formattedBody = `
+		if (changeCount > 0) {
+			formattedBody = `
 ### CSS Analytics changes
 
 | changed metrics | ${changeCount} |
@@ -1170,25 +1175,22 @@ ${Object.entries(changes)
 	})
 	.join('\n')}
 `
-			}
-
-			const octokit = new github.GitHub(githubToken)
-			octokit.issues
-				.createComment({
-					owner,
-					repo,
-					issue_number,
-					body: formattedBody,
-				})
-				.then((commentRequest) => {
-					if (debug) console.log({ commentRequest })
-				})
 		}
-	})
-} catch (error) {
-	if (debug) console.error(error)
-	core.setFailed(error.message)
+
+		const octokit = new github.GitHub(githubToken)
+		await octokit.issues.createComment({
+			owner,
+			repo,
+			issue_number,
+			body: formattedBody,
+		})
+	} catch (error) {
+		if (debug) console.error(error)
+		core.setFailed(error.message)
+	}
 }
+
+run()
 
 
 /***/ }),
