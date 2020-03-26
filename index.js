@@ -68,7 +68,10 @@ async function run() {
 |--------|---------------|----------------|------------|
 ${Object.entries(changes)
 	.map(([id, changeSet]) => {
-		if (typeof changeSet.oldValue !== 'undefined') {
+		if (
+			typeof changeSet.oldValue !== 'undefined' &&
+			typeof changeSet.diff !== 'undefined'
+		) {
 			return `| ${id} | ${formatNumber(changeSet.oldValue)} | ${formatNumber(
 				changeSet.newValue
 			)} | ${formatNumber(changeSet.diff.absolute)} (${
