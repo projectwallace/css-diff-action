@@ -4,7 +4,8 @@
 	"description": "Test repo to let a GitHub action report the CSS Analytics diff in a PR",
 	"main": "runner.js",
 	"scripts": {
-		"test": "exit 1"
+		"test": "exit 1",
+		"build": "ncc build index.js"
 	},
 	"repository": {
 		"type": "git",
@@ -18,6 +19,7 @@
 	},
 	"homepage": "https://github.com/bartveneman/gh-action-css-diff#readme",
 	"devDependencies": {
+		"@zeit/ncc": "^0.22.0",
 		"got": "^10.7.0"
 	},
 	"dependencies": {

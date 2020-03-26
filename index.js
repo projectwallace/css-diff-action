@@ -88,23 +88,27 @@ ${Object.entries(changes)
 
 		return `| ${id} | <ol>${changeSet.diff
 			.map((item) => {
-				return `<li><code>${item.removed ? '<del>' : ''}${
+				return `<li>${item.removed ? '<del>' : ''}${
 					item.added
 						? ' '
-						: item.value.property
-						? `${item.value.property}: ${item.value.value}`
-						: item.value.value || item.value
-				}${item.removed ? '</del>' : ''}</code></li>`
+						: `<code>` +
+						  (item.value.property
+								? `${item.value.property}: ${item.value.value}`
+								: item.value.value || item.value) +
+						  `</code>`
+				}${item.removed ? '</del>' : ''}</li>`
 			})
 			.join('')}</ol> | <ol>${changeSet.diff
 			.map((item) => {
-				return `<li><code>${item.added ? '<ins>' : ' '}${
+				return `<li>${item.added ? '<ins>' : ' '}${
 					item.removed
 						? ' '
-						: item.value.property
-						? `${item.value.property}: ${item.value.value}`
-						: item.value.value || item.value
-				}${item.added ? '</ins>' : ''}</code></li>`
+						: `<code>` +
+						  (item.value.property
+								? `${item.value.property}: ${item.value.value}`
+								: item.value.value || item.value) +
+						  `</code>`
+				}${item.added ? '</ins>' : ''}</li>`
 			})
 			.join('')}</ol> | N/A |`
 	})
