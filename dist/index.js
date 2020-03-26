@@ -1065,32 +1065,17 @@ async function run() {
 		const webhookToken = core.getInput('project-wallace-token')
 		const githubToken = core.getInput('github-token')
 		const debug = Boolean(core.getInput('debug'))
-		const { actor, eventName, payload } = github.context
+		const { eventName, payload } = github.context
 
-		if (!eventName === 'pull_request') {
+		if (eventName !== 'pull_request') {
 			if (debug) console.log('Event is not a Pull Request; Exiting.')
 			return
 		}
 
+		core.setGroup('calculate changes')
+
 		const css = fs.readFileSync(cssPath, 'utf8')
 
-		if (debug) {
-			console.log(
-				JSON.stringify(
-					{
-						cssPath,
-						css,
-						eventName,
-						payload,
-						actor,
-					},
-					null,
-					2
-				)
-			)
-		}
-
-		core.setGroup('calculate changes')
 		const response = await got(
 			`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${webhookToken}`,
 			{
@@ -1114,8 +1099,9 @@ async function run() {
 			}, {})
 		const changeCount = Object.entries(changes).length
 
-		if (debug)
+		if (debug) {
 			console.log(JSON.stringify({ hasChanges, changeCount, changes }, null, 2))
+		}
 		core.endGroup()
 
 		core.setGroup('create PR comment')
