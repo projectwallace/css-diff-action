@@ -24,8 +24,8 @@ This GitHub actions posts your CSS to [projectwallace.com](https://www.projectwa
 name: CSS Workflow
 
 on:
-  pull_request:
-    branches: [master]
+  pull_request: # only run this action on pull requests
+    branches: [master] # and only to the master branch
 
 jobs:
   cssDiff:

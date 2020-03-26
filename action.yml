@@ -11,9 +11,6 @@ inputs:
   css-path:
     description: 'Path to the CSS you want analyzed'
     required: true
-  debug:
-    description: If true, adds some additional logging
-    default: false
 
 runs:
   using: 'node12'

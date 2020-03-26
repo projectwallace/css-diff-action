@@ -1064,16 +1064,16 @@ async function run() {
 		const cssPath = core.getInput('css-path')
 		const webhookToken = core.getInput('project-wallace-token')
 		const githubToken = core.getInput('github-token')
-		const debug = Boolean(core.getInput('debug'))
 		const { eventName, payload } = github.context
 
 		if (eventName !== 'pull_request') {
-			if (debug) console.log('Event is not a Pull Request; Exiting.')
 			return
 		}
 
+		// Read CSS file
 		const css = fs.readFileSync(cssPath, 'utf8')
 
+		// POST CSS to projectwallace.com to get the diff
 		const response = await got(
 			`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${webhookToken}`,
 			{
@@ -1087,6 +1087,7 @@ async function run() {
 		)
 		const { diff } = JSON.parse(response.body)
 
+		// Setup changes and filter non-changed metrics
 		const hasChanges = Object.values(diff).some((metric) => metric.changed)
 		const changes = Object.entries(diff)
 			.filter(([name, metric]) => metric.changed === true)
@@ -1097,14 +1098,10 @@ async function run() {
 			}, {})
 		const changeCount = Object.entries(changes).length
 
-		if (debug) {
-			console.log(JSON.stringify({ hasChanges, changeCount, changes }, null, 2))
-		}
-
+		// Construct a PR comment with changes
 		const owner = payload.repository.owner.login
 		const repo = payload.repository.name
 		const issue_number = payload.number
-		if (debug) console.log({ owner, repo, issue_number })
 
 		let formattedBody = 'No changes in CSS Analytics detected'
 
@@ -1114,7 +1111,7 @@ async function run() {
 				: parseFloat(number).toFixed(3)
 		}
 
-		if (changeCount > 0) {
+		if (hasChanges) {
 			formattedBody = `
 ### CSS Analytics changes
 
@@ -1163,6 +1160,7 @@ ${Object.entries(changes)
 `
 		}
 
+		// POST the actual PR comment
 		const octokit = new github.GitHub(githubToken)
 		await octokit.issues.createComment({
 			owner,
@@ -4515,6 +4513,7 @@ exports.default = async (response, options, emitter) => {
 // ignored, since we can never get coverage for them.
 var assert = __webpack_require__(357)
 var signals = __webpack_require__(306)
+var isWin = /^win/i.test(process.platform)
 
 var EE = __webpack_require__(614)
 /* istanbul ignore if */
@@ -4604,6 +4603,11 @@ signals.forEach(function (sig) {
       /* istanbul ignore next */
       emit('afterexit', null, sig)
       /* istanbul ignore next */
+      if (isWin && sig === 'SIGHUP') {
+        // "SIGHUP" throws an `ENOSYS` error on Windows,
+        // so use a supported signal instead
+        sig = 'SIGINT'
+      }
       process.kill(process.pid, sig)
     }
   }
