@@ -11,17 +11,6 @@ inputs:
   css-path:
     description: 'Path to the CSS you want analyzed'
     required: true
-  debug:
-    description: If true, adds some additional logging
-    default: false
-
-outputs:
-  hasChanged:
-    description: 'Whether the CSS Analytics has changed'
-  changeCount:
-    description: 'How many CSS Analytics metrics have changed'
-  changes:
-    description: 'List of CSS Analytics metrics that have changed'
 
 runs:
   using: 'node12'

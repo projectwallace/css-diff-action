@@ -1,29 +1,31 @@
 {
-	"name": "gh-action-css-diff",
-	"version": "1.0.0",
+	"name": "@projectwallace/css-diff-action",
+	"version": "0.1.0",
+	"private": true,
 	"description": "Test repo to let a GitHub action report the CSS Analytics diff in a PR",
 	"main": "runner.js",
 	"scripts": {
-		"test": "exit 1"
+		"test": "exit 1",
+		"build": "ncc build index.js"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bartveneman/gh-action-css-diff.git"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "Bart Veneman",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/bartveneman/gh-action-css-diff/issues"
 	},
 	"homepage": "https://github.com/bartveneman/gh-action-css-diff#readme",
 	"devDependencies": {
+		"@actions/core": "^1.2.3",
+		"@actions/github": "^2.1.1",
+		"@zeit/ncc": "^0.22.0",
 		"got": "^10.7.0"
 	},
-	"dependencies": {
-		"@actions/core": "^1.2.3",
-		"@actions/github": "^2.1.1"
-	},
+	"dependencies": {},
 	"prettier": {
 		"trailingComma": "es5",
 		"bracketSpacing": true,
