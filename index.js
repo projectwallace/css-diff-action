@@ -16,8 +16,6 @@ async function run() {
 			return
 		}
 
-		core.setGroup('calculate changes')
-
 		const css = fs.readFileSync(cssPath, 'utf8')
 
 		const response = await got(
@@ -46,9 +44,7 @@ async function run() {
 		if (debug) {
 			console.log(JSON.stringify({ hasChanges, changeCount, changes }, null, 2))
 		}
-		core.endGroup()
 
-		core.setGroup('create PR comment')
 		const owner = payload.repository.owner.login
 		const repo = payload.repository.name
 		const issue_number = payload.number
@@ -118,7 +114,6 @@ ${Object.entries(changes)
 			issue_number,
 			body: formattedBody,
 		})
-		core.endGroup()
 	} catch (error) {
 		core.error(error)
 		core.setFailed(error.message)
