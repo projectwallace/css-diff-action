@@ -67,11 +67,9 @@ async function run() {
 | metric | current value | value after PR | difference |
 |--------|---------------|----------------|------------|
 ${Object.entries(changes)
+	.filter(([id, changeSet]) => typeof changeSet.diff !== 'undefined')
 	.map(([id, changeSet]) => {
-		if (
-			typeof changeSet.oldValue !== 'undefined' &&
-			typeof changeSet.diff !== 'undefined'
-		) {
+		if (typeof changeSet.oldValue !== 'undefined') {
 			return `| ${id} | ${formatNumber(changeSet.oldValue)} | ${formatNumber(
 				changeSet.newValue
 			)} | ${formatNumber(changeSet.diff.absolute)} (${
