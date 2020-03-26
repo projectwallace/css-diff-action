@@ -34,6 +34,7 @@ async function run() {
 			)
 		}
 
+		core.setGroup('calculate changes')
 		const response = await got(
 			`https://www.projectwallace.com/webhooks/v1/imports/preview?token=${webhookToken}`,
 			{
@@ -57,8 +58,11 @@ async function run() {
 			}, {})
 		const changeCount = Object.entries(changes).length
 
-		if (debug) console.log({ hasChanges, changeCount, changes })
+		if (debug)
+			console.log(JSON.stringify({ hasChanges, changeCount, changes }, null, 2))
+		core.endGroup()
 
+		core.setGroup('create PR comment')
 		const owner = payload.repository.owner.login
 		const repo = payload.repository.name
 		const issue_number = payload.number
@@ -128,6 +132,7 @@ ${Object.entries(changes)
 			issue_number,
 			body: formattedBody,
 		})
+		core.endGroup()
 	} catch (error) {
 		if (debug) console.error(error)
 		core.setFailed(error.message)
