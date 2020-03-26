@@ -1,4 +1,4 @@
-name: CSS Workflow
+name: CSS Quality
 
 on:
   pull_request:
