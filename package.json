@@ -13,8 +13,8 @@
 		"url": "git+https://github.com/bartveneman/gh-action-css-diff.git"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "Bart Veneman",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/bartveneman/gh-action-css-diff/issues"
 	},

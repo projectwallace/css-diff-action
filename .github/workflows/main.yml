@@ -1,8 +1,6 @@
-name: Main
+name: CSS Workflow
 
 on:
-  push:
-    branches: [master]
   pull_request:
     branches: [master]
 
