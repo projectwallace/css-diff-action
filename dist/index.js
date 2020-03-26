@@ -1084,7 +1084,9 @@ async function run() {
 				},
 				body: css,
 			}
-		)
+		).catch((error) => {
+			throw error
+		})
 		const { diff } = JSON.parse(response.body)
 
 		// Setup changes and filter non-changed metrics
@@ -1162,12 +1164,16 @@ ${Object.entries(changes)
 
 		// POST the actual PR comment
 		const octokit = new github.GitHub(githubToken)
-		await octokit.issues.createComment({
-			owner,
-			repo,
-			issue_number,
-			body: formattedBody,
-		})
+		await octokit.issues
+			.createComment({
+				owner,
+				repo,
+				issue_number,
+				body: formattedBody,
+			})
+			.catch((error) => {
+				throw error
+			})
 	} catch (error) {
 		core.error(error)
 		core.setFailed(error.message)
