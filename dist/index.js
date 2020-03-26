@@ -1175,7 +1175,6 @@ ${Object.entries(changes)
 				throw error
 			})
 	} catch (error) {
-		core.error(error)
 		core.setFailed(error.message)
 	}
 }
