@@ -1176,7 +1176,7 @@ ${Object.entries(changes)
 		})
 		core.endGroup()
 	} catch (error) {
-		if (debug) console.error(error)
+		core.error(error)
 		core.setFailed(error.message)
 	}
 }
