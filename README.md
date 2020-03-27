@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Project Wallace Diff
-        uses: projectwallace/css-diff-action
+        uses: projectwallace/css-diff-action@master
         with:
           project-wallace-token: ${{ secrets.PROJECT_WALLACE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
