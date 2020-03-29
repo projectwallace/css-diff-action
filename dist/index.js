@@ -29870,8 +29870,8 @@ exports.createCommentMarkdown = ({ changes: foobar }) => {
 			all[id] = changeSet
 			return all
 		}, {})
-	const hasChanges = foobar.length > 0
-	const changeCount = Object.entries(foobar).length
+	const changeCount = Object.entries(changes).length
+	const hasChanges = changeCount > 0
 
 	function formatNumber(number) {
 		return Number.isInteger(number)
