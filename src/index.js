@@ -2,7 +2,7 @@ const fs = require('fs')
 const got = require('got')
 const core = require('@actions/core')
 const github = require('@actions/github')
-const { createCommentMarkdown } = require('./src/create-comment')
+const { createCommentMarkdown } = require('./create-comment')
 
 async function run() {
 	try {
