@@ -23,6 +23,7 @@
 		"@actions/core": "^1.2.3",
 		"@actions/github": "^2.1.1",
 		"@zeit/ncc": "^0.22.0",
+		"ava": "^3.5.1",
 		"got": "^10.7.0"
 	},
 	"dependencies": {},

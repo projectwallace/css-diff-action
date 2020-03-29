@@ -1058,6 +1058,7 @@ const fs = __webpack_require__(747)
 const got = __webpack_require__(77)
 const core = __webpack_require__(470)
 const github = __webpack_require__(469)
+const { createCommentMarkdown } = __webpack_require__(949)
 
 async function run() {
 	try {
@@ -1089,79 +1090,12 @@ async function run() {
 		})
 		const { diff } = JSON.parse(response.body)
 
-		// Setup changes and filter non-changed metrics
-		const hasChanges = Object.values(diff).some((metric) => metric.changed)
-		const changes = Object.entries(diff)
-			.filter(([name, metric]) => metric.changed === true)
-			.reduce((all, metric) => {
-				const [id, changeSet] = metric
-				all[id] = changeSet
-				return all
-			}, {})
-		const changeCount = Object.entries(changes).length
-
 		// Construct a PR comment with changes
 		const owner = payload.repository.owner.login
 		const repo = payload.repository.name
 		const issue_number = payload.number
 
-		let formattedBody = 'No changes in CSS Analytics detected'
-
-		function formatNumber(number) {
-			return Number.isInteger(number)
-				? new Intl.NumberFormat().format(number)
-				: parseFloat(number).toFixed(3)
-		}
-
-		if (hasChanges) {
-			formattedBody = `
-### CSS Analytics changes
-
-| changed metrics | ${changeCount} |
-|-----------------|----------------|
-
-| metric | current value | value after PR | difference |
-|--------|---------------|----------------|------------|
-${Object.entries(changes)
-	.filter(([id, changeSet]) => typeof changeSet.diff !== 'undefined')
-	.map(([id, changeSet]) => {
-		if (typeof changeSet.oldValue !== 'undefined') {
-			return `| ${id} | ${formatNumber(changeSet.oldValue)} | ${formatNumber(
-				changeSet.newValue
-			)} | ${formatNumber(changeSet.diff.absolute)} (${
-				changeSet.diff.relative > 0 ? '+' : ''
-			}${formatNumber(changeSet.diff.relative * 100)}%) |`
-		}
-
-		return `| ${id} | <ol>${changeSet.diff
-			.map((item) => {
-				return `<li>${item.removed ? '<del>' : ''}${
-					item.added
-						? ' '
-						: `<code>` +
-						  (item.value.property
-								? `${item.value.property}: ${item.value.value}`
-								: item.value.value || item.value) +
-						  `</code>`
-				}${item.removed ? '</del>' : ''}</li>`
-			})
-			.join('')}</ol> | <ol>${changeSet.diff
-			.map((item) => {
-				return `<li>${item.added ? '<ins>' : ' '}${
-					item.removed
-						? ' '
-						: `<code>` +
-						  (item.value.property
-								? `${item.value.property}: ${item.value.value}`
-								: item.value.value || item.value) +
-						  `</code>`
-				}${item.added ? '</ins>' : ''}</li>`
-			})
-			.join('')}</ol> | N/A |`
-	})
-	.join('\n')}
-`
-		}
+		let formattedBody = createCommentMarkdown(diff)
 
 		// POST the actual PR comment
 		const octokit = new github.GitHub(githubToken)
@@ -29921,6 +29855,83 @@ module.exports = function(fn) {
 	try { return fn() } catch (e) {}
 
 }
+
+/***/ }),
+
+/***/ 949:
+/***/ (function(__unusedmodule, exports) {
+
+exports.createCommentMarkdown = ({ changes: foobar }) => {
+	// Setup changes and filter non-changed metrics
+	const changes = Object.entries(foobar)
+		.filter(([name, metric]) => metric.changed === true)
+		.reduce((all, metric) => {
+			const [id, changeSet] = metric
+			all[id] = changeSet
+			return all
+		}, {})
+	const hasChanges = foobar.length > 0
+	const changeCount = Object.entries(foobar).length
+
+	function formatNumber(number) {
+		return Number.isInteger(number)
+			? new Intl.NumberFormat().format(number)
+			: parseFloat(number).toFixed(3)
+	}
+
+	if (!hasChanges) {
+		return 'No changes in CSS Analytics detected'
+	}
+
+	return `
+### CSS Analytics changes
+
+| changed metrics | ${changeCount} |
+|-----------------|----------------|
+
+| metric | current value | value after PR | difference |
+|--------|---------------|----------------|------------|
+${Object.entries(foobar)
+	.filter(([id, changeSet]) => typeof changeSet.diff !== 'undefined')
+	.map(([id, changeSet]) => {
+		if (typeof changeSet.oldValue !== 'undefined') {
+			return `| ${id} | ${formatNumber(changeSet.oldValue)} | ${formatNumber(
+				changeSet.newValue
+			)} | ${formatNumber(changeSet.diff.absolute)} (${
+				changeSet.diff.relative > 0 ? '+' : ''
+			}${formatNumber(changeSet.diff.relative * 100)}%) |`
+		}
+
+		return `| ${id} | <ol>${changeSet.diff
+			.map((item) => {
+				return `<li>${item.removed ? '<del>' : ''}${
+					item.added
+						? ' '
+						: `<code>` +
+						  (item.value.property
+								? `${item.value.property}: ${item.value.value}`
+								: item.value.value || item.value) +
+						  `</code>`
+				}${item.removed ? '</del>' : ''}</li>`
+			})
+			.join('')}</ol> | <ol>${changeSet.diff
+			.map((item) => {
+				return `<li>${item.added ? '<ins>' : ' '}${
+					item.removed
+						? ' '
+						: `<code>` +
+						  (item.value.property
+								? `${item.value.property}: ${item.value.value}`
+								: item.value.value || item.value) +
+						  `</code>`
+				}${item.added ? '</ins>' : ''}</li>`
+			})
+			.join('')}</ol> | N/A |`
+	})
+	.join('\n')}
+`
+}
+
 
 /***/ }),
 
