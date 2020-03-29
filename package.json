@@ -3,9 +3,9 @@
 	"version": "0.1.0",
 	"private": true,
 	"description": "Test repo to let a GitHub action report the CSS Analytics diff in a PR",
-	"main": "runner.js",
+	"main": "dist/index.js",
 	"scripts": {
-		"test": "exit 1",
+		"test": "ava",
 		"build": "ncc build index.js"
 	},
 	"repository": {
@@ -26,7 +26,9 @@
 		"ava": "^3.5.1",
 		"got": "^10.7.0"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"pretty-bytes": "^5.3.0"
+	},
 	"prettier": {
 		"trailingComma": "es5",
 		"bracketSpacing": true,
