@@ -13,3 +13,8 @@ p {
 code {
 	font-family: monospace, monospace;
 }
+
+@font-face {
+	src: url('somewhere.woff2');
+	font-family: test;
+}
