@@ -1090,14 +1090,19 @@ async function run() {
 		})
 		const { diff } = JSON.parse(response.body)
 
-		// Construct a PR comment with changes
+		// POST the actual PR comment
+		try {
+			const formattedBody = createCommentMarkdown({ changes: diff })
+		} catch (error) {
+			console.error(error)
+			console.error(error.message)
+			core.setFailed(error.message)
+		}
+		console.log(formattedBody)
 		const owner = payload.repository.owner.login
 		const repo = payload.repository.name
 		const issue_number = payload.number
 
-		let formattedBody = createCommentMarkdown({ changes: diff })
-
-		// POST the actual PR comment
 		const octokit = new github.GitHub(githubToken)
 		await octokit.issues
 			.createComment({
