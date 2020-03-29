@@ -1076,7 +1076,7 @@ async function run() {
 
 		// POST CSS to projectwallace.com to get the diff
 		const response = await got(
-			`https://wallace-on-node-git-improve-import-diff-preview.bartveneman.now.sh/webhooks/v2/imports/preview?token=${webhookToken}`,
+			`https://www.projectwallace.com/webhooks/v2/imports/preview?token=${webhookToken}`,
 			{
 				method: 'post',
 				headers: {
@@ -1092,7 +1092,6 @@ async function run() {
 
 		// POST the actual PR comment
 		const formattedBody = createCommentMarkdown({ changes: diff })
-		console.log(formattedBody)
 		const owner = payload.repository.owner.login
 		const repo = payload.repository.name
 		const issue_number = payload.number
