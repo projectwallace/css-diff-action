@@ -1,17 +1,11 @@
 const prettyBytes = require('pretty-bytes')
 
+const DEPRECATED_METRICS = ['stylesheets.size']
+
 function formatNumber(number) {
 	return Number.isInteger(number)
 		? new Intl.NumberFormat().format(number)
 		: parseFloat(number).toFixed(3)
-}
-
-function formatValue(value, key) {
-	if (['test'].includes(key)) {
-		return formatFilesize(value)
-	}
-
-	return formatNumber(value)
 }
 
 function formatFilesize(number, relative = false) {
@@ -55,14 +49,26 @@ function formatPercentage(number, decimals = 2) {
 		return '∞'
 	}
 
-	return `${new Intl.NumberFormat('en-US', {
+	return `${number > 0 ? '+' : ''}${new Intl.NumberFormat('en-US', {
 		style: 'percent',
 		maximumFractionDigits: decimals,
 	}).format(number)}`
 }
 
+function formatListItem({ key, value }) {
+	if (key === 'atrules.fontfaces.unique') {
+		return `<dl>${Object.entries(JSON.parse(value))
+			.map(([prop, val]) => {
+				return `<dt><code>${prop}</code></dt><dd><code>${val}</code></dd>`
+			})
+			.join('')}</dl>`
+	}
+
+	return `<code>${value}</code>`
+}
+
 exports.createCommentMarkdown = ({ changes }) => {
-	if (!changes || changes.length === 0) {
+	if (changes.length === 0) {
 		return 'No changes in CSS Analytics detected'
 	}
 
@@ -75,64 +81,48 @@ exports.createCommentMarkdown = ({ changes }) => {
 		| metric | current value | value after PR | difference |
 		|--------|---------------|----------------|------------|
 		${changes
-			.map(({ title, diff, aggregate }) => {
+			.filter(({ key }) => !DEPRECATED_METRICS.includes(key))
+			.map(({ title, diff, aggregate, key }) => {
 				if (aggregate === 'list') {
-					const oldValues = `<ol>${diff.diff
+					const oldValues = diff.diff
 						.map((item) => {
-							if (item.removed) {
-								return `<li><del><code>${item.value}</code></del></li>`
-							}
-							if (item.added) {
-								return `<li></li>`
-							}
-							return `<li><code>${item.value}</code></li>`
+							if (item.added) return `<li></li>`
+							if (item.removed)
+								return `<li><del>${formatListItem({
+									key,
+									value: item.value,
+								})}</del></li>`
+							return `<li>${formatListItem({ key, value: item.value })}</li>`
 						})
-						.join('')}</ol>`
-					const newValues = `<ol>${diff.diff
+						.join('')
+					const newValues = diff.diff
 						.map((item) => {
-							if (item.added) {
-								return `<li><ins><code>${item.value}</code></ins></li>`
-							}
-							if (item.removed) {
-								return `<li></li>`
-							}
-							return `<li><code>${item.value}</code></li>`
+							if (item.removed) return `<li></li>`
+							if (item.added)
+								return `<li><ins>${formatListItem({
+									key,
+									value: item.value,
+								})}</ins></li>`
+							return `<li>${formatListItem({ key, value: item.value })}</li>`
 						})
-						.join('')}</ol>`
-					return `| ${title} | ${oldValues} | ${newValues} | |`
+						.join('')
+					return `| ${title} | <ol>${oldValues}</ol> | <ol>${newValues}</ol> | |`
 				}
 
-				return `| ${title} | ${formatValue(diff.oldValue)} | ${formatValue(
+				if (key.includes('totalBytes')) {
+					return `| ${title} | ${formatFilesize(
+						diff.oldValue
+					)} | ${formatFilesize(diff.newValue)} | ${formatFilesize(
+						diff.diff.absolute,
+						true
+					)} (${formatPercentage(diff.diff.relative)}) |`
+				}
+
+				return `| ${title} | ${formatNumber(diff.oldValue)} | ${formatNumber(
 					diff.newValue
 				)} | ${formatDiff(diff.diff.absolute)} (${formatPercentage(
 					diff.diff.relative
 				)}) |`
-
-				// return `| ${title} | <ol>${diff.diff
-				// 	.map((item) => {
-				// 		return `<li>${item.removed ? '<del>' : ''}${
-				// 			item.added
-				// 				? ' '
-				// 				: `<code>` +
-				// 				  (item.value.property
-				// 						? `${item.value.property}: ${item.value.value}`
-				// 						: item.value.value || item.value) +
-				// 				  `</code>`
-				// 		}${item.removed ? '</del>' : ''}</li>`
-				// 	})
-				// 	.join('')}</ol> | <ol>${diff.diff
-				// 	.map((item) => {
-				// 		return `<li>${item.added ? '<ins>' : ' '}${
-				// 			item.removed
-				// 				? ' '
-				// 				: `<code>` +
-				// 				  (item.value.property
-				// 						? `${item.value.property}: ${item.value.value}`
-				// 						: item.value.value || item.value) +
-				// 				  `</code>`
-				// 		}${item.added ? '</ins>' : ''}</li>`
-				// 	})
-				// 	.join('')}</ol> | N/A |`
 			})
 			.join('\n')}
 		`

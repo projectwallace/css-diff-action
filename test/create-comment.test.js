@@ -1600,7 +1600,6 @@ test.beforeEach(() => {
 })
 
 test('it shows the amount of changes', (t) => {
-	t.log(actual)
 	t.true(actual.includes('| changed metrics | 54 |'))
 })
 
@@ -1611,30 +1610,36 @@ test('it shows a table header', (t) => {
 })
 
 test('it shows filesize diffs correctly', (t) => {
-	const expected = '| Filesize (raw bytes) | 5,607 | 226 | -5,381 (-95.97%) |'
+	const expected =
+		'| Filesize (raw bytes) | 5.61 kB | 226 B | -5.38 kB (-95.97%) |'
 	t.true(actual.includes(expected))
 })
 
 test('it shows total diffs correctly', (t) => {
-	t.true(actual.includes('| @font-faces | 4 | 0 | -4 (-100%) |'))
-})
-
-test.skip('it shows array-like diffs correctly', (t) => {
+	t.true(actual.includes('| Rules | 84 | 4 | -80 (-95.24%) |'))
 	t.true(
 		actual.includes(
-			'| @media queries | <ol><li><del><code>(min-width: 60rem)</code></del></li><li><del><code>(min-width: 80rem)</code></del></li><li><del><code>(min-width:60rem)</code></del></li><li><del><code>(min-width:80rem)</code></del></li><li><del><code>screen and (prefers-color-scheme: dark)</code></del></li><li><del><code>screen and (prefers-color-scheme:dark)</code></del></li></ol> | <ol><li>  </li><li>  </li><li>  </li><li>  </li><li>  </li><li>  </li></ol> | N/A |'
+			'| Avg. Selector Complexity | 1.154 | 1.250 | +0.096 (+8.33%) |'
 		)
 	)
 })
 
-test.skip('it shows complex array-like diffs correctly', (t) => {
+test('it shows array-like diffs correctly', (t) => {
 	t.true(
 		actual.includes(
-			'| @media queries | <ol><li><del><code>(min-width: 60rem)</code></del></li><li><del><code>(min-width: 80rem)</code></del></li><li><del><code>(min-width:60rem)</code></del></li><li><del><code>(min-width:80rem)</code></del></li><li><del><code>screen and (prefers-color-scheme: dark)</code></del></li><li><del><code>screen and (prefers-color-scheme:dark)</code></del></li></ol> | <ol><li>  </li><li>  </li><li>  </li><li>  </li><li>  </li><li>  </li></ol> | N/A |'
+			`| @font-faces | <ol><li><del><dl><dt><code>font-family</code></dt><dd><code>'PT Serif'</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>400</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local('PT Serif'),local('PTSerif-Regular'),url(/fonts/pt-serif-normal-400.woff2) format('woff2')</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD</code></dd></dl></del></li><li><del><dl><dt><code>font-family</code></dt><dd><code>'PT Serif'</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>700</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local('PT Serif Bold'),local('PTSerif-Bold'),url(/fonts/pt-serif-normal-700.woff2) format('woff2')</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD</code></dd></dl></del></li><li><del><dl><dt><code>font-family</code></dt><dd><code>"PT Serif"</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>400</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local("PT Serif"), local("PTSerif-Regular"), url("/fonts/pt-serif-normal-400.woff2") format("woff2")</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD</code></dd></dl></del></li><li><del><dl><dt><code>font-family</code></dt><dd><code>"PT Serif"</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>700</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local("PT Serif Bold"), local("PTSerif-Bold"), url("/fonts/pt-serif-normal-700.woff2") format("woff2")</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD</code></dd></dl></del></li></ol> | <ol><li></li><li></li><li></li><li></li></ol> | |`
 		)
 	)
 })
 
-test.skip('it matches the snapshot exactly', (t) => {
+test('it shows complex array-like diffs correctly', (t) => {
+	t.true(
+		actual.includes(
+			'| Properties | <ol><li><del><code>--main-width</code></del></li><li><del><code>--ratio</code></del></li><li><del><code>--sidebar-width</code></del></li><li><del><code>-moz-osx-font-smoothing</code></del></li><li><del><code>-moz-tab-size</code></del></li><li><del><code>-ms-text-size-adjust</code></del></li><li></li><li><del><code>-webkit-font-smoothing</code></del></li><li><del><code>-webkit-overflow-scrolling</code></del></li><li><del><code>-webkit-text-size-adjust</code></del></li><li><del><code>align-items</code></del></li><li></li><li><del><code>background</code></del></li><li><code>background-color</code></li><li><del><code>border</code></del></li><li><del><code>border-color</code></del></li><li><del><code>border-radius</code></del></li><li><del><code>box-sizing</code></del></li><li><code>color</code></li><li><del><code>display</code></del></li><li><del><code>fill</code></del></li><li><del><code>flex-direction</code></del></li><li><del><code>font-family</code></del></li><li><code>font-size</code></li><li><del><code>font-weight</code></del></li><li><del><code>gap</code></del></li><li><del><code>grid-column</code></del></li><li><del><code>grid-template-columns</code></del></li><li><del><code>height</code></del></li><li><del><code>line-height</code></del></li><li><del><code>list-style</code></del></li><li><del><code>margin</code></del></li><li><del><code>margin-left</code></del></li><li><del><code>margin-top</code></del></li><li><del><code>max-width</code></del></li><li></li><li><del><code>overflow</code></del></li><li><del><code>overflow-x</code></del></li><li><del><code>padding</code></del></li><li><del><code>padding-left</code></del></li><li><del><code>tab-size</code></del></li><li><del><code>text-decoration-color</code></del></li><li><del><code>text-decoration-thickness</code></del></li><li><del><code>text-size-adjust</code></del></li><li><del><code>white-space</code></del></li></ol> | <ol><li></li><li></li><li></li><li></li><li></li><li></li><li><ins><code>-webkit-appearance</code></ins></li><li></li><li></li><li></li><li></li><li><ins><code>animation-duration</code></ins></li><li></li><li><code>background-color</code></li><li></li><li></li><li></li><li></li><li><code>color</code></li><li></li><li></li><li></li><li></li><li><code>font-size</code></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li><ins><code>outline</code></ins></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol> | |'
+		)
+	)
+})
+
+test('it matches the snapshot exactly', (t) => {
 	t.snapshot(actual)
 })
