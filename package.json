@@ -2,11 +2,11 @@
 	"name": "@projectwallace/css-diff-action",
 	"version": "0.1.0",
 	"private": true,
-	"description": "Test repo to let a GitHub action report the CSS Analytics diff in a PR",
-	"main": "runner.js",
+	"description": "GitHub Action to report the CSS Analytics diff in a PR",
+	"main": "dist/index.js",
 	"scripts": {
-		"test": "exit 1",
-		"build": "ncc build index.js"
+		"test": "ava",
+		"build": "ncc build src/index.js"
 	},
 	"repository": {
 		"type": "git",
@@ -23,9 +23,12 @@
 		"@actions/core": "^1.2.3",
 		"@actions/github": "^2.1.1",
 		"@zeit/ncc": "^0.22.0",
+		"ava": "^3.5.1",
 		"got": "^10.7.0"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"pretty-bytes": "^5.3.0"
+	},
 	"prettier": {
 		"trailingComma": "es5",
 		"bracketSpacing": true,
