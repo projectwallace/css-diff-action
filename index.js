@@ -35,13 +35,7 @@ async function run() {
 		const { diff } = JSON.parse(response.body)
 
 		// POST the actual PR comment
-		try {
-			const formattedBody = createCommentMarkdown({ changes: diff })
-		} catch (error) {
-			console.error(error)
-			console.error(error.message)
-			core.setFailed(error.message)
-		}
+		const formattedBody = createCommentMarkdown({ changes: diff })
 		console.log(formattedBody)
 		const owner = payload.repository.owner.login
 		const repo = payload.repository.name
