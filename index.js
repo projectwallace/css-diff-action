@@ -39,7 +39,7 @@ async function run() {
 		const repo = payload.repository.name
 		const issue_number = payload.number
 
-		let formattedBody = createCommentMarkdown(diff)
+		let formattedBody = createCommentMarkdown({ changes: diff })
 
 		// POST the actual PR comment
 		const octokit = new github.GitHub(githubToken)
