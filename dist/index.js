@@ -30009,7 +30009,7 @@ function formatPercentage(number, decimals = 2) {
 }
 
 exports.createCommentMarkdown = ({ changes }) => {
-	if (changes.length === 0) {
+	if (!changes || changes.length === 0) {
 		return 'No changes in CSS Analytics detected'
 	}
 
