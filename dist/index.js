@@ -34,7 +34,7 @@ module.exports =
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(104);
+/******/ 		return __webpack_require__(676);
 /******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
@@ -1047,72 +1047,6 @@ class Response extends Readable {
 }
 
 module.exports = Response;
-
-
-/***/ }),
-
-/***/ 104:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
-
-const fs = __webpack_require__(747)
-const got = __webpack_require__(77)
-const core = __webpack_require__(470)
-const github = __webpack_require__(469)
-const { createCommentMarkdown } = __webpack_require__(949)
-
-async function run() {
-	try {
-		const cssPath = core.getInput('css-path')
-		const webhookToken = core.getInput('project-wallace-token')
-		const githubToken = core.getInput('github-token')
-		const { eventName, payload } = github.context
-
-		if (eventName !== 'pull_request') {
-			return
-		}
-
-		// Read CSS file
-		const css = fs.readFileSync(cssPath, 'utf8')
-
-		// POST CSS to projectwallace.com to get the diff
-		const response = await got(
-			`https://www.projectwallace.com/webhooks/v2/imports/preview?token=${webhookToken}`,
-			{
-				method: 'post',
-				headers: {
-					'Content-Type': 'text/css',
-					Accept: 'application/json',
-				},
-				body: css,
-			}
-		).catch((error) => {
-			throw error
-		})
-		const { diff } = JSON.parse(response.body)
-
-		// POST the actual PR comment
-		const formattedBody = createCommentMarkdown({ changes: diff })
-		const owner = payload.repository.owner.login
-		const repo = payload.repository.name
-		const issue_number = payload.number
-
-		const octokit = new github.GitHub(githubToken)
-		await octokit.issues
-			.createComment({
-				owner,
-				repo,
-				issue_number,
-				body: formattedBody,
-			})
-			.catch((error) => {
-				throw error
-			})
-	} catch (error) {
-		core.setFailed(error.message)
-	}
-}
-
-run()
 
 
 /***/ }),
@@ -8165,6 +8099,14 @@ module.exports = require("stream");
 
 /***/ }),
 
+/***/ 414:
+/***/ (function(module) {
+
+module.exports = eval("require")("./src/create-comment");
+
+
+/***/ }),
+
 /***/ 415:
 /***/ (function(__unusedmodule, exports) {
 
@@ -12274,90 +12216,6 @@ function getPageLinks (link) {
 
 /***/ }),
 
-/***/ 589:
-/***/ (function(module) {
-
-"use strict";
-
-
-const BYTE_UNITS = [
-	'B',
-	'kB',
-	'MB',
-	'GB',
-	'TB',
-	'PB',
-	'EB',
-	'ZB',
-	'YB'
-];
-
-const BIT_UNITS = [
-	'b',
-	'kbit',
-	'Mbit',
-	'Gbit',
-	'Tbit',
-	'Pbit',
-	'Ebit',
-	'Zbit',
-	'Ybit'
-];
-
-/*
-Formats the given number using `Number#toLocaleString`.
-- If locale is a string, the value is expected to be a locale-key (for example: `de`).
-- If locale is true, the system default locale is used for translation.
-- If no value for locale is specified, the number is returned unmodified.
-*/
-const toLocaleString = (number, locale) => {
-	let result = number;
-	if (typeof locale === 'string') {
-		result = number.toLocaleString(locale);
-	} else if (locale === true) {
-		result = number.toLocaleString();
-	}
-
-	return result;
-};
-
-module.exports = (number, options) => {
-	if (!Number.isFinite(number)) {
-		throw new TypeError(`Expected a finite number, got ${typeof number}: ${number}`);
-	}
-
-	options = Object.assign({bits: false}, options);
-	const UNITS = options.bits ? BIT_UNITS : BYTE_UNITS;
-
-	if (options.signed && number === 0) {
-		return ' 0 ' + UNITS[0];
-	}
-
-	const isNegative = number < 0;
-	const prefix = isNegative ? '-' : (options.signed ? '+' : '');
-
-	if (isNegative) {
-		number = -number;
-	}
-
-	if (number < 1) {
-		const numberString = toLocaleString(number, options.locale);
-		return prefix + numberString + ' ' + UNITS[0];
-	}
-
-	const exponent = Math.min(Math.floor(Math.log10(number) / 3), UNITS.length - 1);
-	// eslint-disable-next-line unicorn/prefer-exponentiation-operator
-	number = Number((number / Math.pow(1000, exponent)).toPrecision(3));
-	const numberString = toLocaleString(number, options.locale);
-
-	const unit = UNITS[exponent];
-
-	return prefix + numberString + ' ' + unit;
-};
-
-
-/***/ }),
-
 /***/ 605:
 /***/ (function(module) {
 
@@ -12832,6 +12690,72 @@ function authenticate(state, options) {
 module.exports = function btoa(str) {
   return new Buffer(str).toString('base64')
 }
+
+
+/***/ }),
+
+/***/ 676:
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+
+const fs = __webpack_require__(747)
+const got = __webpack_require__(77)
+const core = __webpack_require__(470)
+const github = __webpack_require__(469)
+const { createCommentMarkdown } = __webpack_require__(414)
+
+async function run() {
+	try {
+		const cssPath = core.getInput('css-path')
+		const webhookToken = core.getInput('project-wallace-token')
+		const githubToken = core.getInput('github-token')
+		const { eventName, payload } = github.context
+
+		if (eventName !== 'pull_request') {
+			return
+		}
+
+		// Read CSS file
+		const css = fs.readFileSync(cssPath, 'utf8')
+
+		// POST CSS to projectwallace.com to get the diff
+		const response = await got(
+			`https://www.projectwallace.com/webhooks/v2/imports/preview?token=${webhookToken}`,
+			{
+				method: 'post',
+				headers: {
+					'Content-Type': 'text/css',
+					Accept: 'application/json',
+				},
+				body: css,
+			}
+		).catch((error) => {
+			throw error
+		})
+		const { diff } = JSON.parse(response.body)
+
+		// POST the actual PR comment
+		const formattedBody = createCommentMarkdown({ changes: diff })
+		const owner = payload.repository.owner.login
+		const repo = payload.repository.name
+		const issue_number = payload.number
+
+		const octokit = new github.GitHub(githubToken)
+		await octokit.issues
+			.createComment({
+				owner,
+				repo,
+				issue_number,
+				body: formattedBody,
+			})
+			.catch((error) => {
+				throw error
+			})
+	} catch (error) {
+		core.setFailed(error.message)
+	}
+}
+
+run()
 
 
 /***/ }),
@@ -29937,146 +29861,6 @@ module.exports = function(fn) {
 	try { return fn() } catch (e) {}
 
 }
-
-/***/ }),
-
-/***/ 949:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-const prettyBytes = __webpack_require__(589)
-
-const DEPRECATED_METRICS = ['stylesheets.size']
-
-function formatNumber(number) {
-	return Number.isInteger(number)
-		? new Intl.NumberFormat().format(number)
-		: parseFloat(number).toFixed(3)
-}
-
-function formatFilesize(number, relative = false) {
-	if (
-		number === null ||
-		Number.isNaN(number) ||
-		typeof number === 'undefined'
-	) {
-		return ''
-	}
-
-	return prettyBytes(number, { signed: relative })
-}
-
-function formatDiff(number) {
-	if (
-		number === null ||
-		Number.isNaN(number) ||
-		typeof number === 'undefined'
-	) {
-		return ''
-	}
-
-	if (number === 0) {
-		return 0
-	}
-
-	return number > 0 ? `+${formatNumber(number)}` : formatNumber(number)
-}
-
-function formatPercentage(number, decimals = 2) {
-	if (
-		number === null ||
-		Number.isNaN(number) ||
-		typeof number === 'undefined'
-	) {
-		return ''
-	}
-
-	if (number === Infinity) {
-		return '∞'
-	}
-
-	return `${number > 0 ? '+' : ''}${new Intl.NumberFormat('en-US', {
-		style: 'percent',
-		maximumFractionDigits: decimals,
-	}).format(number)}`
-}
-
-function formatListItem({ key, value }) {
-	if (key === 'atrules.fontfaces.unique') {
-		return `<dl>${Object.entries(JSON.parse(value))
-			.map(([prop, val]) => {
-				return `<dt><code>${prop}</code></dt><dd><code>${val}</code></dd>`
-			})
-			.join('')}</dl>`
-	}
-
-	return `<code>${value}</code>`
-}
-
-exports.createCommentMarkdown = ({ changes }) => {
-	if (changes.length === 0) {
-		return 'No changes in CSS Analytics detected'
-	}
-
-	return `
-		### CSS Analytics changes
-
-		| changed metrics | ${changes.length} |
-		|-----------------|-------------------|
-
-		| metric | current value | value after PR | difference |
-		|--------|---------------|----------------|------------|
-		${changes
-			.filter(({ key }) => !DEPRECATED_METRICS.includes(key))
-			.map(({ title, diff, aggregate, key }) => {
-				if (aggregate === 'list') {
-					const oldValues = diff.diff
-						.map((item) => {
-							if (item.added) return `<li></li>`
-							if (item.removed)
-								return `<li><del>${formatListItem({
-									key,
-									value: item.value,
-								})}</del></li>`
-							return `<li>${formatListItem({ key, value: item.value })}</li>`
-						})
-						.join('')
-					const newValues = diff.diff
-						.map((item) => {
-							if (item.removed) return `<li></li>`
-							if (item.added)
-								return `<li><ins>${formatListItem({
-									key,
-									value: item.value,
-								})}</ins></li>`
-							return `<li>${formatListItem({ key, value: item.value })}</li>`
-						})
-						.join('')
-					return `| ${title} | <ol>${oldValues}</ol> | <ol>${newValues}</ol> | |`
-				}
-
-				if (key.includes('totalBytes')) {
-					return `| ${title} | ${formatFilesize(
-						diff.oldValue
-					)} | ${formatFilesize(diff.newValue)} | ${formatFilesize(
-						diff.diff.absolute,
-						true
-					)} (${formatPercentage(diff.diff.relative)}) |`
-				}
-
-				return `| ${title} | ${formatNumber(diff.oldValue)} | ${formatNumber(
-					diff.newValue
-				)} | ${formatDiff(diff.diff.absolute)} (${formatPercentage(
-					diff.diff.relative
-				)}) |`
-			})
-			.join('\n')}
-		`
-		.split('\n')
-		.map((line) => line.trim())
-		.join('\n')
-		.trim()
-}
-
 
 /***/ }),
 

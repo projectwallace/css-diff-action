@@ -2,11 +2,11 @@
 	"name": "@projectwallace/css-diff-action",
 	"version": "0.1.0",
 	"private": true,
-	"description": "Test repo to let a GitHub action report the CSS Analytics diff in a PR",
+	"description": "GitHub Action to report the CSS Analytics diff in a PR",
 	"main": "dist/index.js",
 	"scripts": {
 		"test": "ava",
-		"build": "ncc build index.js"
+		"build": "ncc build src/index.js"
 	},
 	"repository": {
 		"type": "git",
