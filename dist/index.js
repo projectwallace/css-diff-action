@@ -12784,6 +12784,7 @@ async function run() {
 		const cssPath = core.getInput('css-path')
 		const webhookToken = core.getInput('project-wallace-token')
 		const githubToken = core.getInput('github-token')
+		const shouldPostPrComment = core.getInput('post-pr-comment') === 'true'
 		const { eventName, payload } = github.context
 
 		if (eventName !== 'pull_request') {
@@ -12805,9 +12806,13 @@ async function run() {
 				body: css,
 			}
 		).catch((error) => {
+			core.setFailed(`Could not retrieve diff from projectwallace.com`)
 			throw error
 		})
 		const { diff } = JSON.parse(response.body)
+		console.log(JSON.stringify(diff, null, 2))
+
+		if (!shouldPostPrComment) return
 
 		// POST the actual PR comment
 		const formattedBody = createCommentMarkdown({ changes: diff })
@@ -12824,6 +12829,7 @@ async function run() {
 				body: formattedBody,
 			})
 			.catch((error) => {
+				core.warning(`Error ${error}: Failed to post comment to PR`)
 				throw error
 			})
 	} catch (error) {

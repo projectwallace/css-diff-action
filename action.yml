@@ -11,6 +11,10 @@ inputs:
   css-path:
     description: 'Path to the CSS you want analyzed'
     required: true
+  post-pr-comment:
+    description: Whether this action should post a comment to the PR with changes
+    required: true
+    default: true
 
 runs:
   using: 'node12'
