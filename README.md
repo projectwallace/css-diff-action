@@ -2,6 +2,8 @@
 
 This GitHub actions posts your CSS to [projectwallace.com](https://www.projectwallace.com?ref=gh-diff-action), calculates the change between the current state of your project and your PR, and comments the diff in the PR.
 
+![Example comment](https://repository-images.githubusercontent.com/249823357/07b48c00-7aba-11ea-8c20-bf349a3005ac)
+
 ## Usage
 
 ### Inputs
