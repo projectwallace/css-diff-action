@@ -16,3 +16,4 @@ jobs:
           project-wallace-token: ${{ secrets.PROJECT_WALLACE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           css-path: ./style.css
+          post-pr-comment: false
