@@ -9,7 +9,7 @@ async function run() {
 		const cssPath = core.getInput('css-path')
 		const webhookToken = core.getInput('project-wallace-token')
 		const githubToken = core.getInput('github-token')
-		const shouldPostPrComment = core.getInput('post-pr-comment')
+		const shouldPostPrComment = core.getInput('post-pr-comment') === 'true'
 		const { eventName, payload } = github.context
 
 		if (eventName !== 'pull_request') {
