@@ -64,6 +64,7 @@ async function run() {
 		}
 
 		if (wallaceComment) {
+			console.log(`Updating comment ID ${wallaceComment.id}`)
 			await octokit.issues.updateComment({
 				owner,
 				repo,

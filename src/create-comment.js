@@ -75,8 +75,7 @@ exports.createCommentMarkdown = ({ changes }) => {
 	return `
 		### CSS Analytics changes
 
-		| changed metrics | ${changes.length} |
-		|-----------------|-------------------|
+		_Last updated: ${new Date().toISOString()}_
 
 		| metric | current value | value after PR | difference |
 		|--------|---------------|----------------|------------|
