@@ -31074,29 +31074,44 @@ async function run() {
 		let wallaceComment
 
 		try {
-			const comments = await octokit.issues.listComments({
+			const response = await octokit.issues.listComments({
 				owner,
 				repo,
 				issue_number,
 			})
+			const comments = response.data
+			wallaceComment = comments.find(comment => comment.body.toLowerCase().includes('css analytics changes'))
 
-			console.log(JSON.stringify(comments, null, 2))
+			console.log(JSON.stringify(wallaceComment, null, 2))
 		} catch (error) {
 			console.error('error fetching PW comment')
 			console.error(error)
 		}
 
-		await octokit.issues
-			.createComment({
+		if (wallaceComment) {
+			await octokit.issues.updateComment({
 				owner,
 				repo,
 				issue_number,
-				body: formattedBody,
+				comment_id: wallaceComment.id,
 			})
-			.catch((error) => {
-				core.warning(`Error ${error}: Failed to post comment to PR`)
-				throw error
-			})
+				.catch((error) => {
+					core.warning(`Error ${error}: Failed to update comment to PR`)
+					throw error
+				})
+		} else {
+			await octokit.issues
+				.createComment({
+					owner,
+					repo,
+					issue_number,
+					body: formattedBody,
+				})
+				.catch((error) => {
+					core.warning(`Error ${error}: Failed to post comment to PR`)
+					throw error
+				})
+		}
 	} catch (error) {
 		core.setFailed(error.message)
 	}
