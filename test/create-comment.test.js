@@ -1599,10 +1599,6 @@ test.beforeEach(() => {
 	actual = createCommentMarkdown({ changes: diffFixture })
 })
 
-test('it shows the amount of changes', (t) => {
-	t.true(actual.includes('| changed metrics | 54 |'))
-})
-
 test('it shows a table header', (t) => {
 	t.true(
 		actual.includes('| metric | current value | value after PR | difference |')
