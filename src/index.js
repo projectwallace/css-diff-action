@@ -46,6 +46,21 @@ async function run() {
 		const issue_number = payload.number
 
 		const octokit = new github.GitHub(githubToken)
+		let wallaceComment
+
+		try {
+			const comments = await octokit.issues.listComments({
+				owner,
+				repo,
+				issue_number,
+			})
+
+			console.log(JSON.stringify(comments, null, 2))
+		} catch (error) {
+			console.error('error fetching PW comment')
+			console.error(error)
+		}
+
 		await octokit.issues
 			.createComment({
 				owner,
