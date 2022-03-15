@@ -69,6 +69,7 @@ async function run() {
 				repo,
 				issue_number,
 				comment_id: wallaceComment.id,
+				body: formattedBody,
 			})
 				.catch((error) => {
 					core.warning(`Error ${error}: Failed to update comment to PR`)
