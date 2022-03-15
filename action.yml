@@ -1,12 +1,12 @@
 name: 'CSS Analytics Diff'
 description: 'Take CSS and get the changes per CSS Analytics metric'
-author: 'Bart Veneman (ProjectWallace.com)'
+author: 'Bart Veneman (projectwallace.com)'
 
 inputs:
   github-token:
     required: true
   project-wallace-token:
-    description: 'Webhook token of the project on ProjectWallace.com'
+    description: 'Webhook token of the project on projectwallace.com'
     required: true
   css-path:
     description: 'Path to the CSS you want analyzed'
@@ -17,7 +17,7 @@ inputs:
     default: true
 
 runs:
-  using: 'node12'
+  using: 'node14'
   main: 'dist/index.js'
 
 branding:
