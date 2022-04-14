@@ -55,7 +55,7 @@ async function run() {
 				issue_number,
 			})
 			const comments = response.data
-			wallaceComment = comments.find(comment => comment.body.toLowerCase().includes('css analytics changes'))
+			wallaceComment = comments.find(comment => comment.body.toLowerCase().includes('css analytics changes') || comment.body.includes('No changes in CSS Analytics detected'))
 
 			console.log(JSON.stringify(wallaceComment, null, 2))
 		} catch (error) {
