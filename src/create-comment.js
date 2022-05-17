@@ -57,7 +57,7 @@ function formatPercentage(number, decimals = 2) {
 
 function formatListItem({ key, value }) {
 	if (key === 'atrules.fontfaces.unique') {
-		return `<dl>${Object.entries(JSON.parse(value))
+		return `<dl>${Object.entries(value)
 			.map(([prop, val]) => {
 				return `<dt><code>${prop}</code></dt><dd><code>${val}</code></dd>`
 			})
