@@ -31036,9 +31036,8 @@ async function run() {
 		const shouldPostPrComment = core.getInput('post-pr-comment') === 'true'
 		const { eventName, payload } = github.context
 
-		if (eventName !== 'pull_request') {
-			return
-		}
+		if (eventName !== 'pull_request') return
+		if (!shouldPostPrComment) return
 
 		// Read CSS file
 		const css = fs.readFileSync(cssPath, 'utf8')
@@ -31058,10 +31057,16 @@ async function run() {
 			core.setFailed(`Could not retrieve diff from projectwallace.com`)
 			throw error
 		})
-		const { diff } = JSON.parse(response.body)
-		console.log(JSON.stringify(diff, null, 2))
 
-		if (!shouldPostPrComment) return
+		let diff
+
+		try {
+			const parsed = JSON.parse(response.body)
+			diff = parsed.diff
+		} catch (error) {
+			console.error('Cannot parse JSON response from projectwallace.com')
+			core.setFailed(error.message)
+		}
 
 		// POST the actual PR comment
 		const formattedBody = createCommentMarkdown({ changes: diff })
@@ -31080,8 +31085,6 @@ async function run() {
 			})
 			const comments = response.data
 			wallaceComment = comments.find(comment => comment.body.toLowerCase().includes('css analytics changes') || comment.body.includes('No changes in CSS Analytics detected'))
-
-			console.log(JSON.stringify(wallaceComment, null, 2))
 		} catch (error) {
 			console.error('error fetching PW comment')
 			console.error(error)
