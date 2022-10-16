@@ -1,6 +1,6 @@
 const prettyBytes = require('pretty-bytes')
 
-const DEPRECATED_METRICS = ['stylesheets.size']
+const DEPRECATED_METRICS = ['stylesheets.size', 'atrules.fontfaces.unique', 'atrules.fontface.unique']
 
 function formatNumber(number) {
 	return Number.isInteger(number)

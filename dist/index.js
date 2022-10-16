@@ -30699,7 +30699,7 @@ function wrappy (fn, cb) {
 
 const prettyBytes = __nccwpck_require__(5168)
 
-const DEPRECATED_METRICS = ['stylesheets.size']
+const DEPRECATED_METRICS = ['stylesheets.size', 'atrules.fontfaces.unique', 'atrules.fontface.unique']
 
 function formatNumber(number) {
 	return Number.isInteger(number)
@@ -30755,13 +30755,13 @@ function formatPercentage(number, decimals = 2) {
 }
 
 function formatListItem({ key, value }) {
-	// if (key === 'atrules.fontfaces.unique') {
-	// 	return `<dl>${Object.entries(JSON.parse(value))
-	// 		.map(([prop, val]) => {
-	// 			return `<dt><code>${prop}</code></dt><dd><code>${val}</code></dd>`
-	// 		})
-	// 		.join('')}</dl>`
-	// }
+	if (key === 'atrules.fontfaces.unique') {
+		return `<dl>${Object.entries(value)
+			.map(([prop, val]) => {
+				return `<dt><code>${prop}</code></dt><dd><code>${val}</code></dd>`
+			})
+			.join('')}</dl>`
+	}
 
 	return `<code>${value}</code>`
 }
