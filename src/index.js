@@ -2,7 +2,12 @@ const fs = require('fs')
 const got = require('got')
 const core = require('@actions/core')
 const github = require('@actions/github')
+const Sentry = require("@sentry/node")
 const { createCommentMarkdown } = require('./create-comment')
+
+Sentry.init({
+	dsn: "https://5f217579acd24d33af01995ed625d981@o50610.ingest.sentry.io/4504022978199552",
+});
 
 async function run() {
 	try {
@@ -30,6 +35,7 @@ async function run() {
 				body: css,
 			}
 		).catch((error) => {
+			Sentry.captureException(error)
 			core.setFailed(`Could not retrieve diff from projectwallace.com`)
 			throw error
 		})
@@ -40,6 +46,7 @@ async function run() {
 			const parsed = JSON.parse(response.body)
 			diff = parsed.diff
 		} catch (error) {
+			Sentry.captureException(error)
 			console.error('Cannot parse JSON response from projectwallace.com')
 			core.setFailed(error.message)
 		}
@@ -62,6 +69,7 @@ async function run() {
 			const comments = response.data
 			wallaceComment = comments.find(comment => comment.body.toLowerCase().includes('css analytics changes') || comment.body.includes('No changes in CSS Analytics detected'))
 		} catch (error) {
+			Sentry.captureException(error)
 			console.error('error fetching PW comment')
 			console.error(error)
 		}
@@ -76,6 +84,7 @@ async function run() {
 				body: formattedBody,
 			})
 				.catch((error) => {
+					Sentry.captureException(error)
 					core.warning(`Error ${error}: Failed to update comment to PR`)
 					throw error
 				})
@@ -88,11 +97,13 @@ async function run() {
 					body: formattedBody,
 				})
 				.catch((error) => {
-					core.warning(`Error ${error}: Failed to post comment to PR`)
+					Sentry.captureException(error)
+					core.warning(`Error ${error}: Failed to post new comment to PR`)
 					throw error
 				})
 		}
 	} catch (error) {
+		Sentry.captureException(error)
 		core.setFailed(error.message)
 	}
 }
