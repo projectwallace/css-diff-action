@@ -160,46 +160,6 @@ const diffFixture = [
 		},
 	},
 	{
-		higherIsBetter: false,
-		title: '@font-faces',
-		details: 'fontfaces',
-		aggregate: 'list',
-		key: 'atrules.fontfaces.unique',
-		diff: {
-			diff: [
-				{
-					value:
-						'{"font-family":"\'PT Serif\'","font-style":"normal","font-weight":"400","font-display":"swap","src":"local(\'PT Serif\'),local(\'PTSerif-Regular\'),url(/fonts/pt-serif-normal-400.woff2) format(\'woff2\')","unicode-range":"U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"}',
-					added: false,
-					removed: true,
-					changed: true,
-				},
-				{
-					value:
-						'{"font-family":"\'PT Serif\'","font-style":"normal","font-weight":"700","font-display":"swap","src":"local(\'PT Serif Bold\'),local(\'PTSerif-Bold\'),url(/fonts/pt-serif-normal-700.woff2) format(\'woff2\')","unicode-range":"U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"}',
-					added: false,
-					removed: true,
-					changed: true,
-				},
-				{
-					value:
-						'{"font-family":"\\"PT Serif\\"","font-style":"normal","font-weight":"400","font-display":"swap","src":"local(\\"PT Serif\\"), local(\\"PTSerif-Regular\\"), url(\\"/fonts/pt-serif-normal-400.woff2\\") format(\\"woff2\\")","unicode-range":"U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"}',
-					added: false,
-					removed: true,
-					changed: true,
-				},
-				{
-					value:
-						'{"font-family":"\\"PT Serif\\"","font-style":"normal","font-weight":"700","font-display":"swap","src":"local(\\"PT Serif Bold\\"), local(\\"PTSerif-Bold\\"), url(\\"/fonts/pt-serif-normal-700.woff2\\") format(\\"woff2\\")","unicode-range":"U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"}',
-					added: false,
-					removed: true,
-					changed: true,
-				},
-			],
-			changed: true,
-		},
-	},
-	{
 		title: '@media queries',
 		higherIsBetter: false,
 		aggregate: 'sum',
@@ -1616,14 +1576,6 @@ test('it shows total diffs correctly', (t) => {
 	t.true(
 		actual.includes(
 			'| Avg. Selector Complexity | 1.154 | 1.250 | +0.096 (+8.33%) |'
-		)
-	)
-})
-
-test('it shows array-like diffs correctly', (t) => {
-	t.true(
-		actual.includes(
-			`| @font-faces | <ol><li><del><dl><dt><code>font-family</code></dt><dd><code>'PT Serif'</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>400</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local('PT Serif'),local('PTSerif-Regular'),url(/fonts/pt-serif-normal-400.woff2) format('woff2')</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD</code></dd></dl></del></li><li><del><dl><dt><code>font-family</code></dt><dd><code>'PT Serif'</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>700</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local('PT Serif Bold'),local('PTSerif-Bold'),url(/fonts/pt-serif-normal-700.woff2) format('woff2')</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD</code></dd></dl></del></li><li><del><dl><dt><code>font-family</code></dt><dd><code>"PT Serif"</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>400</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local("PT Serif"), local("PTSerif-Regular"), url("/fonts/pt-serif-normal-400.woff2") format("woff2")</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD</code></dd></dl></del></li><li><del><dl><dt><code>font-family</code></dt><dd><code>"PT Serif"</code></dd><dt><code>font-style</code></dt><dd><code>normal</code></dd><dt><code>font-weight</code></dt><dd><code>700</code></dd><dt><code>font-display</code></dt><dd><code>swap</code></dd><dt><code>src</code></dt><dd><code>local("PT Serif Bold"), local("PTSerif-Bold"), url("/fonts/pt-serif-normal-700.woff2") format("woff2")</code></dd><dt><code>unicode-range</code></dt><dd><code>U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD</code></dd></dl></del></li></ol> | <ol><li></li><li></li><li></li><li></li></ol> | |`
 		)
 	)
 })
