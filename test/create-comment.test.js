@@ -1587,7 +1587,3 @@ test('it shows complex array-like diffs correctly', (t) => {
 		)
 	)
 })
-
-test('it matches the snapshot exactly', (t) => {
-	t.snapshot(actual)
-})
