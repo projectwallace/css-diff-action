@@ -35,7 +35,11 @@ async function run() {
 				body: css,
 			}
 		).catch((error) => {
-			Sentry.captureException(error)
+			Sentry.captureException(error, {
+				tags: {
+					step: 'fetching diff'
+				}
+			})
 			core.setFailed(`Could not retrieve diff from projectwallace.com`)
 			throw error
 		})
@@ -46,7 +50,11 @@ async function run() {
 			const parsed = JSON.parse(response.body)
 			diff = parsed.diff
 		} catch (error) {
-			Sentry.captureException(error)
+			Sentry.captureException(error, {
+				tags: {
+					step: 'parsing diff'
+				}
+			})
 			console.error('Cannot parse JSON response from projectwallace.com')
 			core.setFailed(error.message)
 		}
@@ -69,7 +77,11 @@ async function run() {
 			const comments = response.data
 			wallaceComment = comments.find(comment => comment.body.toLowerCase().includes('css analytics changes') || comment.body.includes('No changes in CSS Analytics detected'))
 		} catch (error) {
-			Sentry.captureException(error)
+			Sentry.captureException(error, {
+				tags: {
+					step: 'fetching comment'
+				}
+			})
 			console.error('error fetching PW comment')
 			console.error(error)
 		}
@@ -84,7 +96,11 @@ async function run() {
 				body: formattedBody,
 			})
 				.catch((error) => {
-					Sentry.captureException(error)
+					Sentry.captureException(error, {
+						tags: {
+							step: 'updating comment'
+						}
+					})
 					core.warning(`Error ${error}: Failed to update comment to PR`)
 					throw error
 				})
@@ -97,13 +113,21 @@ async function run() {
 					body: formattedBody,
 				})
 				.catch((error) => {
-					Sentry.captureException(error)
+					Sentry.captureException(error, {
+						tags: {
+							step: 'posting comment'
+						}
+					})
 					core.warning(`Error ${error}: Failed to post new comment to PR`)
 					throw error
 				})
 		}
 	} catch (error) {
-		Sentry.captureException(error)
+		Sentry.captureException(error, {
+			tags: {
+				step: 'general error'
+			}
+		})
 		core.setFailed(error.message)
 	}
 }
