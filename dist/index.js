@@ -44754,6 +44754,8 @@ async function run() {
 		// Read CSS file
 		const css = fs.readFileSync(cssPath, 'utf8')
 
+		const redactedToken = '*'.padStart(16, '*') + webhookToken.slice(16)
+
 		// POST CSS to projectwallace.com to get the diff
 		const response = await got(
 			`https://www.projectwallace.com/webhooks/v2/imports/preview?token=${webhookToken}`,
@@ -44768,7 +44770,8 @@ async function run() {
 		).catch((error) => {
 			Sentry.captureException(error, {
 				tags: {
-					step: 'fetching diff'
+					step: 'fetching diff',
+					token: redactedToken,
 				}
 			})
 			core.setFailed(`Could not retrieve diff from projectwallace.com`)
@@ -44783,7 +44786,8 @@ async function run() {
 		} catch (error) {
 			Sentry.captureException(error, {
 				tags: {
-					step: 'parsing diff'
+					step: 'parsing diff',
+					token: redactedToken,
 				}
 			})
 			console.error('Cannot parse JSON response from projectwallace.com')
@@ -44810,7 +44814,10 @@ async function run() {
 		} catch (error) {
 			Sentry.captureException(error, {
 				tags: {
-					step: 'fetching comment'
+					step: 'fetching comment',
+					owner,
+					repo,
+					issue_number,
 				}
 			})
 			console.error('error fetching PW comment')
@@ -44829,7 +44836,10 @@ async function run() {
 				.catch((error) => {
 					Sentry.captureException(error, {
 						tags: {
-							step: 'updating comment'
+							step: 'updating comment',
+							owner,
+							repo,
+							issue_number,
 						}
 					})
 					core.warning(`Error ${error}: Failed to update comment to PR`)
@@ -44846,7 +44856,10 @@ async function run() {
 				.catch((error) => {
 					Sentry.captureException(error, {
 						tags: {
-							step: 'posting comment'
+							step: 'posting comment',
+							owner,
+							repo,
+							issue_number,
 						}
 					})
 					core.warning(`Error ${error}: Failed to post new comment to PR`)
