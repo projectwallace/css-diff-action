@@ -27,7 +27,7 @@ async function run() {
 
 		// POST CSS to projectwallace.com to get the diff
 		const response = await got(
-			`https://www.projectwallace.com/webhooks/v2/imports/preview?token=${webhookToken}`,
+			`https://www.projectwallace.com/webhooks/v3/imports/preview?token=${webhookToken}`,
 			{
 				method: 'post',
 				headers: {
