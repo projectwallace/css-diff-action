@@ -44498,7 +44498,7 @@ exports.createCommentMarkdown = ({ changes }) => {
 					return `| ${title} | <ol>${oldValues}</ol> | <ol>${newValues}</ol> | |`
 				}
 
-				if (key.includes('totalBytes')) {
+				if (key.includes('size')) {
 					return `| ${title} | ${formatFilesize(
 						diff.oldValue
 					)} | ${formatFilesize(diff.newValue)} | ${formatFilesize(
