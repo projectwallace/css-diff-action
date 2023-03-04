@@ -20,7 +20,7 @@
 	},
 	"homepage": "https://github.com/bartveneman/gh-action-css-diff#readme",
 	"devDependencies": {
-		"@actions/core": "^1.6.0",
+		"@actions/core": "^1.9.1",
 		"@actions/github": "^2.2.0",
 		"@vercel/ncc": "^0.33.3",
 		"ava": "^3.5.1",
